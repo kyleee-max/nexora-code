@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Nexora Labs - Sharing Code">
+<meta property="og:description" content="Code sharing For Bot development ">
+<meta property="og:image" content="https://files.catbox.moe/73a5aa.jpg">
+<meta property="og:url" content="https://nexora-code.vercel.app">
+<meta property="og:type" content="website">
+    <title>Nexora Labs - Sharing Code</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --cf-blue: #0051c3;
+            --cf-dark: #1d1d1f;
+            --cf-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #d1d5db;
+            overflow-x: hidden;
+        }
+
+        .cf-card {
+            background: #0a0a0a;
+            border: 1px solid var(--cf-border);
+            transition: border-color 0.2s;
+        }
+
+        .cf-card:hover {
+            border-color: #3b82f6;
+        }
+
+        .cf-btn-primary {
+            background-color: var(--cf-blue);
+            transition: filter 0.2s;
+        }
+
+        .cf-btn-primary:hover {
+            filter: brightness(1.2);
+        }
+
+        .hide { display: none !important; }
+        
+        .sidebar-link.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border-right: 2px solid #3b82f6;
+        }
+
+        pre {
+            scrollbar-width: thin;
+            scrollbar-color: #3b82f6 transparent;
+        }
+
+        #mobile-overlay {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        #mobile-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        #toast-container {
+            pointer-events: none;
+        }
+        .toast-animate {
+            animation: slideUp 0.3s ease forwards, fadeOut 0.3s ease 2.7s forwards;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-500/30">
+
+    <div id="toast-container" class="fixed bottom-10 left-0 right-0 z-[100] flex justify-center px-6"></div>
+
+    <aside class="fixed left-0 top-0 h-full w-64 bg-[#0a0a0a] border-r border-white/5 z-40 hidden md:flex flex-col">
+        <div class="p-6 flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+            <img src="https://files.catbox.moe/ro52ek.png" alt="Logo" class="w-8 h-8 rounded object-cover border border-white/10">
+            <span class="text-lg font-bold tracking-tight text-white">Nexora Labs</span>
+        </div>
+
+        <nav class="flex-1 px-3 space-y-1 mt-4">
+            <button onclick="navigate('home')" class="sidebar-link active w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all text-left">
+                <i class="fas fa-home w-5 text-center"></i> Dashboard
+            </button>
+            <button onclick="navigate('code')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all hover:bg-white/5 text-left text-slate-400">
+                <i class="fas fa-code w-5 text-center"></i> Code list
+            </button>
+            <button onclick="navigate('about')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all hover:bg-white/5 text-left text-slate-400">
+                <i class="fas fa-user-astronaut w-5 text-center"></i> Developer
+            </button>
+            <button onclick="navigate('donate')" class="sidebar-link w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-all hover:bg-white/5 text-left text-slate-400">
+                <i class="fas fa-heart w-5 text-center"></i> Sponsorship
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-white/5">
+            <button onclick="navigate('admin')" class="w-full flex items-center gap-3 px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-blue-400 transition text-left">
+                <i class="fas fa-lock"></i> Nexora Labs
+            </button>
+        </div>
+    </aside>
+
+    <header class="md:hidden fixed top-0 w-full h-16 bg-[#0a0a0a] border-b border-white/5 z-50 flex justify-between items-center px-6">
+        <div class="flex items-center gap-2">
+            <img src="https://files.catbox.moe/ro52ek.png" alt="Logo" class="w-8 h-8 rounded object-cover">
+            <span class="font-bold text-white uppercase tracking-wider text-sm">Nexora Labs</span>
+        </div>
+        <button onclick="toggleMobileMenu()" class="text-white p-2">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+    </header>
+
+    <main class="md:ml-64 pt-24 md:pt-10 px-6 md:px-12 pb-20">
+        <section id="page-home" class="page-content">
+            <header class="mb-10">
+                <h1 class="text-3xl font-bold text-white mb-2">Welcome to Nexora Labs</h1>
+                <p class="text-slate-400">Sharing Code For bot Development Type Esm & Cjs.</p>
+            </header>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <div class="cf-card rounded-xl overflow-hidden shadow-2xl relative aspect-video lg:aspect-auto">
+                    <video class="w-full h-full object-cover opacity-80" autoPlay loop muted playsInline>
+                        <source src="https://files.catbox.moe/tan75s.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="flex flex-col justify-center gap-6">
+                    <div class="cf-card p-6 rounded-xl">
+                        <h3 class="text-white font-bold mb-2 flex items-center gap-2">
+                            <i class="fas fa-rocket text-blue-500"></i> Speed & Scalability
+                        </h3>
+                        <p class="text-sm text-slate-400">Kode dirancang untuk eksekusi cepat dan konsumsi RAM yang rendah.</p>
+                    </div>
+                    <div class="cf-card p-6 rounded-xl">
+                        <h3 class="text-white font-bold mb-2 flex items-center gap-2">
+                            <i class="fas fa-shield-alt text-green-500"></i> Secure Source
+                        </h3>
+                        <p class="text-sm text-slate-400">Seluruh library diperiksa secara manual untuk keamanan data pengguna.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="navigate('code')" class="cf-btn-primary px-6 py-2.5 rounded text-white font-semibold text-sm">Explore Code</button>
+                        <button onclick="navigate('about')" class="bg-white/5 border border-white/10 px-6 py-2.5 rounded text-white font-semibold text-sm hover:bg-white/10">Documentation</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-code" class="page-content hide">
+            <header class="mb-10 flex flex-col md:flex-row justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-1">Repository</h2>
+                    <p class="text-slate-400 text-sm">Kelola dan gunakan library Nexora Labs.</p>
+                </div>
+                <div class="flex items-center gap-2 bg-[#0a0a0a] border border-white/10 rounded p-1 h-fit overflow-x-auto">
+                    <button onclick="setFilter('type', 'ALL')" class="filter-btn px-4 py-1.5 text-xs font-bold rounded bg-blue-600/20 text-blue-400 whitespace-nowrap">ALL</button>
+                    <button onclick="setFilter('type', 'ESM')" class="filter-btn px-4 py-1.5 text-xs font-bold rounded text-slate-500 hover:text-white whitespace-nowrap">ESM</button>
+                    <button onclick="setFilter('type', 'CJS')" class="filter-btn px-4 py-1.5 text-xs font-bold rounded text-slate-500 hover:text-white whitespace-nowrap">CJS</button>
+                </div>
+            </header>
+            <div id="code-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+        </section>
+
+        <section id="page-detail" class="page-content hide">
+            <button onclick="navigate('code')" class="text-slate-500 hover:text-blue-400 text-sm mb-6 flex items-center gap-2 font-medium">
+                <i class="fas fa-chevron-left"></i> Back to Repository
+            </button>
+            <div id="detail-container"></div>
+        </section>
+
+        <section id="page-admin" class="page-content hide">
+            <div id="admin-login" class="max-w-sm mx-auto py-20 text-center">
+                <div class="cf-card p-10 rounded-xl">
+                    <h2 class="text-xl font-bold text-white mb-6">Authenticate</h2>
+                    <input type="password" id="admin-pass" placeholder="Authorization Key" class="w-full bg-black border border-white/10 p-3 rounded mb-4 text-center focus:border-blue-500 outline-none text-white">
+                    <button onclick="loginAdmin()" class="w-full cf-btn-primary py-3 rounded font-bold text-sm text-white">Login to Console</button>
+                </div>
+            </div>
+            <div id="admin-dashboard" class="hide space-y-8">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-white">System Admin</h2>
+                    <button onclick="logoutAdmin()" class="text-xs font-bold text-red-500 hover:underline">Revoke Session</button>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="cf-card p-6 rounded-xl space-y-4">
+                        <h3 class="font-bold text-white flex items-center gap-2 text-sm uppercase tracking-wider"><i class="fas fa-plus"></i> New Entry</h3>
+                        <input id="f-title" placeholder="Entry Title" class="w-full bg-black border border-white/10 p-2.5 rounded text-sm focus:border-blue-500 outline-none text-white">
+                        <div class="grid grid-cols-2 gap-2">
+                            <select id="f-type" class="bg-black border border-white/10 p-2.5 rounded text-sm text-white">
+                                <option value="ESM">ESM</option>
+                                <option value="CJS">CJS</option>
+                            </select>
+                            <select id="f-cat" class="bg-black border border-white/10 p-2.5 rounded text-sm text-white">
+                                <option value="CASE">CASE</option>
+                                <option value="PLUGINS">PLUGINS</option>
+                            </select>
+                        </div>
+                        <input id="f-image" placeholder="Cover Image URL" class="w-full bg-black border border-white/10 p-2.5 rounded text-sm focus:border-blue-500 outline-none text-white">
+                        <textarea id="f-desc" placeholder="Brief Description" class="w-full bg-black border border-white/10 p-2.5 rounded text-sm h-20 outline-none text-white"></textarea>
+                        <textarea id="f-code" placeholder="Source Code..." class="w-full bg-black border border-white/10 p-2.5 rounded text-[10px] font-mono h-40 outline-none text-white"></textarea>
+                        <button onclick="saveFeature()" class="w-full cf-btn-primary py-3 rounded font-bold text-xs text-white">DEPLOY ENTRY</button>
+                    </div>
+                    <div class="lg:col-span-2 space-y-3" id="admin-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-about" class="page-content hide">
+            <div class="max-w-4xl mx-auto cf-card p-12 rounded-2xl text-center">
+                <div class="w-24 h-24 mx-auto mb-6 relative">
+                    <img src="https://files.catbox.moe/ro52ek.png" alt="Developer" class="w-full h-full object-cover rounded-xl border-2 border-blue-500/30">
+                    <div class="absolute -bottom-2 -right-2 bg-blue-600 w-8 h-8 rounded-full flex items-center justify-center border-4 border-[#0a0a0a]">
+                        <i class="fas fa-check text-[10px] text-white"></i>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-4 uppercase tracking-tighter">The Developer Team</h2>
+                <p class="text-slate-400 mb-8 max-w-xl mx-auto">Nexora Labs adalah suatu labs yang dikembangkan oleh kael senpai dan tim lainnya.</p>
+                <div class="flex justify-center gap-4">
+                    <a href="https://wa.me/6283854859219" target="_blank" class="bg-[#25D366] text-white px-6 py-2 rounded font-bold text-sm flex items-center gap-2 hover:opacity-90 transition shadow-lg shadow-green-500/20">
+                        <i class="fab fa-whatsapp text-lg"></i> Chat Developer
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-donate" class="page-content hide text-center">
+            <div class="max-w-2xl mx-auto py-4">
+                <i class="fas fa-heart text-pink-500 text-5xl mb-6"></i>
+                <h2 class="text-3xl font-bold text-white mb-4">Support Our Research</h2>
+                <p class="text-slate-400 mb-10 leading-relaxed">Donasi Anda membantu kami membayar biaya API dan memelihara infrastruktur server agar tetap online 24/7.</p>
+                <div class="cf-card p-8 rounded-2xl flex flex-col items-center gap-8 border-blue-500/20 bg-blue-500/5">
+                    <div class="bg-white p-4 rounded-xl shadow-2xl">
+                        <img src="https://files.catbox.moe/auvadr.png" alt="QRIS Payment" class="w-64 h-auto object-contain rounded">
+                    </div>
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-white mb-2">Scan QRIS di atas untuk berdonasi</p>
+                        <p class="text-xs text-slate-500">Mendukung semua E-Wallet & Mobile Banking</p>
+                    </div>
+                    <a href="https://wa.me/6283854859219" target="_blank" class="text-blue-400 font-bold text-sm hover:underline">Konfirmasi Donasi <i class="fas fa-external-link-alt ml-1 text-[10px]"></i></a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="mobile-overlay" class="fixed inset-0 bg-black/95 backdrop-blur-lg z-[60] flex flex-col p-10 space-y-8">
+        <div class="flex justify-between items-center mb-4">
+            <span class="text-blue-500 font-black tracking-widest text-lg uppercase">Menu</span>
+            <button onclick="toggleMobileMenu()" class="text-2xl text-white w-10 h-10 flex items-center justify-center rounded-full bg-white/5">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="flex flex-col space-y-4">
+            <button onclick="navigate('home')" class="text-2xl font-black text-white text-left py-2 border-b border-white/5 hover:text-blue-400 transition">DASHBOARD</button>
+            <button onclick="navigate('code')" class="text-2xl font-black text-white text-left py-2 border-b border-white/5 hover:text-blue-400 transition">CODE LIST</button>
+            <button onclick="navigate('about')" class="text-2xl font-black text-white text-left py-2 border-b border-white/5 hover:text-blue-400 transition">DEVELOPER</button>
+            <button onclick="navigate('donate')" class="text-2xl font-black text-white text-left py-2 border-b border-white/5 hover:text-blue-400 transition">SPONSORSHIP</button>
+        </div>
+    </div>
+
+    <script>
+        const MASTER_HASH = "e595fb566450136c8f170e87801a732f14859461625eb28d57334d4eea16ad41";
+
+        async function verifyKey(input) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(input.trim());
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+            return hashHex === MASTER_HASH;
+        }
+
+        let features = JSON.parse(localStorage.getItem('nexora_labs_data')) || [];
+        let currentFilterType = 'ALL';
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'bg-[#0a0a0a]' : 'bg-red-950/50';
+            const icon = type === 'success' ? 'fa-check-circle text-blue-500' : 'fa-exclamation-circle text-red-500';
+            const borderColor = type === 'success' ? 'border-blue-500/50' : 'border-red-500/50';
+            toast.className = `${bgColor} ${borderColor} border px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 toast-animate backdrop-blur-md mb-2`;
+            toast.innerHTML = `<i class="fas ${icon}"></i><span class="text-xs font-bold text-white tracking-wide">${message.toUpperCase()}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3200);
+        }
+
+        function navigate(pageId, data = null) {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hide'));
+            const targetPage = document.getElementById('page-' + pageId);
+            if(targetPage) targetPage.classList.remove('hide');
+            
+            document.querySelectorAll('.sidebar-link').forEach(l => {
+                l.classList.remove('active', 'text-white');
+                l.classList.add('text-slate-400');
+                if(l.innerText.trim().toLowerCase().includes(pageId)) {
+                    l.classList.add('active', 'text-white');
+                    l.classList.remove('text-slate-400');
+                }
+            });
+            if(pageId === 'code') renderGrid();
+            if(pageId === 'detail') renderDetail(data);
+            window.scrollTo(0,0);
+            closeMobileMenu();
+        }
+
+        function toggleMobileMenu() {
+            const overlay = document.getElementById('mobile-overlay');
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.classList.add('active'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            const overlay = document.getElementById('mobile-overlay');
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('code-grid');
+            grid.innerHTML = '';
+            const filtered = features.filter(f => (currentFilterType === 'ALL' || f.type === currentFilterType));
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="col-span-full py-20 text-center text-slate-600 text-sm italic">Belum ada repository.</div>';
+                return;
+            }
+            filtered.forEach(f => {
+                const card = document.createElement('div');
+                card.className = "cf-card rounded-lg overflow-hidden flex flex-col cursor-pointer group";
+                card.onclick = () => navigate("detail", f);
+                card.innerHTML = `
+                    <div class="h-32 bg-zinc-900 border-b border-white/5 relative overflow-hidden">
+                        <img src="${f.image}" class="w-full h-full object-cover opacity-30 group-hover:opacity-60 transition duration-500">
+                    </div>
+                    <div class="p-5 flex-grow">
+                        <h3 class="font-bold text-white mb-2 text-sm">${f.title}</h3>
+                        <p class="text-xs text-slate-500 line-clamp-2">${f.description}</p>
+                    </div>
+                    <div class="px-5 py-3 border-t border-white/5 flex justify-between bg-white/[0.02]">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase">${f.category}</span>
+                    </div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function renderDetail(f) {
+            const container = document.getElementById('detail-container');
+            container.innerHTML = `
+                <div class="cf-card p-8 rounded-xl max-w-4xl">
+                    <h1 class="text-3xl font-black text-white mb-4">${f.title}</h1>
+                    <div class="relative bg-[#050505] rounded-lg border border-white/5 overflow-hidden">
+                        <div class="bg-white/5 px-4 py-2 border-b border-white/5 flex justify-between">
+                            <span class="text-[10px] font-mono text-slate-500">source.js</span>
+                            <button onclick="copyCode(\`${f.code.replace(/`/g, '\\`')}\`)" class="text-[10px] font-bold text-blue-400">COPY</button>
+                        </div>
+                        <pre class="p-6 text-xs text-blue-200 font-mono overflow-x-auto"><code>${f.code}</code></pre>
+                    </div>
+                </div>`;
+        }
+
+        function setFilter(key, val) {
+            currentFilterType = val;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.toggle('bg-blue-600/20', b.innerText === val);
+                b.classList.toggle('text-blue-400', b.innerText === val);
+            });
+            renderGrid();
+        }
+
+        function copyCode(txt) {
+            const el = document.createElement('textarea');
+            el.value = txt;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast("Copied!");
+        }
+
+        async function loginAdmin() {
+            const passInput = document.getElementById('admin-pass').value;
+            if(!passInput) return;
+            const isMatch = await verifyKey(passInput);
+            if(isMatch) {
+                document.getElementById('admin-login').classList.add('hide');
+                document.getElementById('admin-dashboard').classList.remove('hide');
+                renderAdminList();
+                showToast("Authorized.");
+            } else { 
+                showToast("Invalid key.", "error"); 
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('admin-login').classList.remove('hide');
+            document.getElementById('admin-dashboard').classList.add('hide');
+            document.getElementById('admin-pass').value = '';
+        }
+
+        function saveFeature() {
+            const f = {
+                id: Math.random().toString(16).slice(2, 8),
+                title: document.getElementById('f-title').value,
+                type: document.getElementById('f-type').value,
+                category: document.getElementById('f-cat').value,
+                image: document.getElementById('f-image').value,
+                description: document.getElementById('f-desc').value,
+                code: document.getElementById('f-code').value
+            };
+            features.push(f);
+            localStorage.setItem('nexora_labs_data', JSON.stringify(features));
+            renderAdminList();
+            showToast("Deployed.");
+        }
+
+        function deleteFeature(id) {
+            features = features.filter(x => x.id !== id);
+            localStorage.setItem('nexora_labs_data', JSON.stringify(features));
+            renderAdminList();
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-list');
+            list.innerHTML = '';
+            features.forEach(f => {
+                const item = document.createElement('div');
+                item.className = "cf-card p-4 rounded-lg flex justify-between";
+                item.innerHTML = `<span class="text-sm text-white">${f.title}</span><button onclick="deleteFeature('${f.id}')" class="text-red-500">DEL</button>`;
+                list.appendChild(item);
+            });
+        }
+
+        window.onload = () => navigate('home');
+    </script>
+</body>
+</html>
